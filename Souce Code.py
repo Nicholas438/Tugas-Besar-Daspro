@@ -1,15 +1,32 @@
+# Tubes Daspro
+
+
+# Kamus
+# File yang digunakan pada code
 file_user = open("user.csv")
-# Subprogram untuk menghitung jumlah baris dari file csv
-def count_row(file_user):
-    #Setting initial value of the counter to zero
+file_game = open("game.csv")
+file_kepemilikan = open("kepemilikan.csv")
+file_riwayat = open("riwayat.csv")
+
+
+# Daftar fungsi dan prosedur
+def count_row(file):
+    # Subprogram untuk menghitung jumlah baris dari file csv
+    
+    # Kamus Lokal
+    # rowcount: int
+
+    # Inisialisasi rowcount menjadi 0
     rowcount  = 0
-    #iterating through the whole file
-    for row in open("user.csv"):
+    # Iterasi menghitung count sepanjang file
+    for row in file:
         rowcount+= 1
     return rowcount
 
 
 def parsing_user(file_user,id,username,nama,password,role,saldo):
+    # Subprogram untuk menginisialisasi file user.csv
+    
     count = 0
     while True:
  
@@ -116,5 +133,3 @@ password = [0 for i in range(count_row(file_user))]
 role = [0 for i in range(count_row(file_user))]
 saldo = [0 for i in range(count_row(file_user))]
 parsing_user(file_user,id,username,nama,password,role,saldo)
-
-  
