@@ -3,19 +3,19 @@
 
 # Kamus
 # File yang digunakan pada code
-file_user = open("user.csv")
-file_game = open("game.csv")
-file_kepemilikan = open("kepemilikan.csv")
-file_riwayat = open("riwayat.csv")
+file_user = open("user.csv","r")
+
 
 
 # Daftar fungsi dan prosedur
+# Inisialisasi pengubah file csv menjadi list
 def count_row(file):
     # Subprogram untuk menghitung jumlah baris dari file csv
     
     # Kamus Lokal
     # rowcount: int
 
+    # Algoritma
     # Inisialisasi rowcount menjadi 0
     rowcount  = 0
     # Iterasi menghitung count sepanjang file
@@ -23,66 +23,74 @@ def count_row(file):
         rowcount+= 1
     return rowcount
 
+def length(sentence):
+    # Menghitung panjang dari suatu string
 
-def parsing_user(file_user,id,username,nama,password,role,saldo):
+    # Kamus Lokal
+    # len : int
+    # sentence: string
+
+    # Algoritma
+    len = 0
+    for i in sentence:
+        len+=1
+    return len
+
+
+# Inisialisasi mengubah semua csv menjadi list
+def parsing_user(id,username,nama,password,role,saldo):
     # Subprogram untuk menginisialisasi file user.csv
+
+    file_user = open("user.csv",'r')
+    Lines = file_user.readlines()
     
     count = 0
-    while True:
- 
-        # Get next line from file
-        row = file_user.readline()
-    
-        # if line is empty
-        # end of file is reached
-        if not row:
-            break
-    
+    for line in Lines:
         id[count] = ""
         i = 0
-        while i<len(row):
-            if row[i] !=";":
-                id[count]+=row[i]
+        while i<length(line):
+            if line[i] !=";":
+                id[count]+=line[i]
                 i+=1
             else:
                 break
         i+=1
         username[count] = ""
-        while i<len(row):
-            if row[i] !=";":
-                username[count]+=row[i]
+        while i<length(line):
+            if line[i] !=";":
+                username[count]+=line[i]
                 i+=1
             else:
                 break
         i+=1
         nama[count] = ""
-        while i<len(row):
-            if row[i] !=";":
-                nama[count]+=row[i]
+        while i<length(line):
+            if line[i] !=";":
+                nama[count]+=line[i]
                 i+=1
             else:
                 break
         i+=1
         password[count] = ""
-        while i<len(row):
-            if row[i] !=";":
-                password[count]+=row[i]
+        while i<length(line):
+            if line[i] !=";":
+                password[count]+=line[i]
                 i+=1
             else:
                 break
         i+=1
         role[count] = ""
-        while i<len(row):
-            if row[i] !=";":
-                role[count]+=row[i]
+        while i<length(line):
+            if line[i] !=";":
+                role[count]+=line[i]
                 i+=1
             else:
                 break
         i+=1
         saldo[count] =  ""
-        while i<(len(row)-1):
-            if row[i] !=";":
-                saldo[count]+=row[i]
+        while i<(length(line)-1):
+            if line[i] !=";":
+                saldo[count]+=line[i]
                 i+=1
             else:
                 break
@@ -109,7 +117,7 @@ def login():
                 count = 0
                 row_count = row
 
-                while count < len(line):
+                while count < length(line):
                     if line[count]!=";":
                         line_username+=line[count]
                         count+=1
@@ -126,10 +134,11 @@ def login():
 
 
 # Inisialisasi parsing file user.csv
-id = [0 for i in range(count_row(file_user))]
-username = [0 for i in range(count_row(file_user))]
-nama = [0 for i in range(count_row(file_user))]
-password = [0 for i in range(count_row(file_user))]
-role = [0 for i in range(count_row(file_user))]
-saldo = [0 for i in range(count_row(file_user))]
-parsing_user(file_user,id,username,nama,password,role,saldo)
+row_user = count_row(file_user)
+id = [0 for i in range(row_user)]
+username = [0 for i in range(row_user)]
+nama = [0 for i in range(row_user)]
+password = [0 for i in range(row_user)]
+role = [0 for i in range(row_user)]
+saldo = [0 for i in range(row_user)]
+parsing_user(id,username,nama,password,role,saldo)
