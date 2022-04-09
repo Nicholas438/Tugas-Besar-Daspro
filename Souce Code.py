@@ -176,27 +176,59 @@ def parsing_file3(id_game_kepemilikan,var1):
         count+=1
     return id_game_kepemilikan,var1
 
-login_count = -1 # Menandakan belum login sehingga tidak ada posisi di list
-def login(login_count):
-    login_username = str(input("Masukkan username: "))
-    login_password = str(input("Masukkan password: "))
-    username_found = False
-    login_status = False
-    for i in range(len(username)):
-        if login_username == username[i]:
-            username_found = True
-            if password[i] == login_password:
-                login_status = True
-                login_count = i
-                print("Selamat datang",nama[login_count])
-                break
-            else:
-                print("Password atau username salah atau tidak ditemukan.")
-                break
-    if username_found == False:
-        print("Password atau username salah atau tidak ditemukan.")
-    return login_status, login_count
 
+# F02. Login
+
+def login():
+    global login_count, login_status
+    if login_status == False:
+        # Melakukan login user dan mencatat posisi pada list user.csv
+        login_username = str(input("Masukkan username: "))
+        login_password = str(input("Masukkan password: "))
+        username_found = False
+        for i in range(len(username)):
+            if login_username == username[i]:
+                username_found = True
+                if password[i] == login_password:
+                    login_status = True
+                    login_count = i
+                    print("Selamat datang,",nama[login_count])
+                    return login_status,login_count
+                else:
+                    print("Password atau username salah atau tidak ditemukan.")
+                    break
+        if username_found == False:
+            print("Password atau username salah atau tidak ditemukan.")
+    else:
+        print("Anda sudah login. Silahkan exit jika ingin login kembali sebagai akun lain.")
+
+
+# F01. Register
+def register():
+    global role,login_count,username,nama,password
+    if login_status == True:
+        if role[login_count] == "admin":
+            register_nama = input("Masukkan nama: ")
+            register_username = input("Masukkan username: ")
+            register_password = input("Masukkan password: ")
+            username_used = False
+            for i in range(row_user):
+                if register_username == username[i]:
+                    print("Username terpakai. Silahkan menggunakan username lain.")
+                    username_used = True
+            if username_used == False:
+                namatemp = [register_nama]
+                nama += namatemp
+                usernametemp = [register_username]
+                username += usernametemp
+                passwordtemp = [register_password]
+                password += passwordtemp
+                print("Username",register_username,"telah berhasil register ke dalam “Binomo”.")
+                print(username)
+        else:
+            print("Hanya admin yang dapat mengakses fitur ini.")
+    else:
+        print("Silahkan login sebelum menggunakan fitur ini.")
 
 # Inisialisasi parsing file user.csv
 row_user = count_row(file_user)
@@ -233,4 +265,13 @@ id_game_kepemilikan = [0 for i in range(row_kepemilikan)]
 user_id_kepemilikan = [0 for i in range(row_kepemilikan)]
 parsing_file3(id_game_kepemilikan,user_id_kepemilikan)
 
-login(login_count)
+login_count = -1 # Menandakan belum login sehingga tidak ada posisi di list
+login_status = False # Menandakan belum login
+
+perintah = input("Selamat datang di BNMO! Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada\n")
+while True:
+    if (perintah == "login" or perintah == "Login" or perintah == "LOGIN"):
+        login()
+    elif (perintah == "Register" or perintah == "REGISTER" or perintah == "register"):
+        register()
+    perintah = input("Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada \n")
