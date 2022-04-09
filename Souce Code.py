@@ -397,3 +397,15 @@ login_status = False # Menandakan belum login
 
 perintah = input("Selamat datang di BNMO! Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada\n")
 while True:
+    if perintah.lower() == "login":
+        login()
+    elif perintah.lower() == "register":
+        register()
+    elif perintah.lower() == "tambah_game":
+        tambah_game()
+    elif perintah.lower() == "ubah_game":
+        ubah_game()
+    elif perintah.lower() == "ubah_stok":
+        ubah_stok()
+        
+    perintah = input("Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada \n")
