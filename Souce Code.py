@@ -176,9 +176,10 @@ def parsing_file3(id_game_kepemilikan,var1):
         count+=1
     return id_game_kepemilikan,var1
 
-def login():
-    login_username = str(input("Masukkan username: ",end = ""))
-    login_password = str(input("Masukkan password: ",end = ""))
+login_count = -1 # Menandakan belum login sehingga tidak ada posisi di list
+def login(login_count):
+    login_username = str(input("Masukkan username: "))
+    login_password = str(input("Masukkan password: "))
     username_found = False
     login_status = False
     for i in range(len(username)):
@@ -187,13 +188,14 @@ def login():
             if password[i] == login_password:
                 login_status = True
                 login_count = i
+                print("Selamat datang",nama[login_count])
                 break
             else:
                 print("Password atau username salah atau tidak ditemukan.")
                 break
     if username_found == False:
         print("Password atau username salah atau tidak ditemukan.")
-    return login_status,login_count
+    return login_status, login_count
 
 
 # Inisialisasi parsing file user.csv
@@ -230,4 +232,5 @@ row_kepemilikan = count_row(file_kepemilikan)
 id_game_kepemilikan = [0 for i in range(row_kepemilikan)]
 user_id_kepemilikan = [0 for i in range(row_kepemilikan)]
 parsing_file3(id_game_kepemilikan,user_id_kepemilikan)
-print(id_game_riwayat)
+
+login(login_count)
