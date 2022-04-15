@@ -2,13 +2,17 @@
 
 
 # Kamus
-# File yang digunakan pada code
+
+import argparse
+import os
+parser = argparse.ArgumentParser()
+parser.add_argument("datafolder",help = "Folder tempat data.csv")
+args = parser.parse_args()
+current_dir = os.getcwd()
+data_path = os.path.join(current_dir,args.datafolder,"game.csv")
 
 
-file_user = open("user.csv","r")
-file_game = open("game.csv","r")
-file_riwayat = open("riwayat.csv","r")
-file_kepemilikan = open("kepemilikan.csv","r")
+
 
 # Daftar fungsi dan prosedur
 # Inisialisasi pengubah file csv menjadi list
@@ -63,8 +67,8 @@ def valid_input(number,type1,type2):
 def parsing_file1(file,id,var1,var2,var3,var4,var5):
     # Subprogram untuk menginisialisasi file user.csv dan game.csv
     global row_user,row_game
-    file_user = open(file,'r')
-    Lines = file_user.readlines()
+    with open(data_path,'r') as f:
+        Lines = f.readlines()
     
     count = 0
     for line in Lines:
@@ -110,14 +114,14 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
                 break
         i+=1
         var5[count] =  ""
-        if (file == "user.csv" and count != (row_user-1)) or (file == "game.csv" and count != (row_game-1)):
+        if count != (row_user-1) and count != (row_game-1):
             while i<(length(line)-1):
                 if line[i] !=";":
                     var5[count]+=line[i]
                     i+=1
                 else:
                     break
-        else:
+        elif count == (row_user-1) or count == (row_game-1):
             while i<(length(line)):
                 if line[i] !=";":
                     var5[count]+=line[i]
@@ -130,8 +134,8 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
 def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
     # Subprogram untuk menginisialisasi file riwayat.csv
 
-    file_riwayat = open('riwayat.csv','r')
-    Lines = file_riwayat.readlines()
+    with open(data_path,'r') as f:
+        Lines = f.readlines()
     
     count = 0
     for line in Lines:
@@ -189,8 +193,8 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
 def parsing_file3(id_game_kepemilikan,var1):
     # Subprogram untuk menginisialisasi file riwayat.csv
 
-    file_kepemilikan = open('kepemilikan.csv','r')
-    Lines = file_kepemilikan.readlines()
+    with open(data_path,'r') as f:
+        Lines = f.readlines()
     
     count = 0
     for line in Lines:
@@ -315,7 +319,7 @@ def tambah_game():
             id_game_baru = "GAME" + nomor_game
             id_game += [id_game_baru]
             nama_game += [nama_game_baru]
-            kategori_game += [kategori_game]
+            kategori_game += [kategori_game_baru]
             tahun_rilis += [tahun_rilis_baru]
             harga += [harga_baru]
             stok += [stok_baru]
@@ -431,6 +435,11 @@ def sorting(skema,nama_game_sort,tahun_rilis_sort,id_game_sort,harga_sort,katego
         sort_ascending(harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
     elif skema == "harga-":
         sort_descending(harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+    elif skema == "":
+        return
+    else:
+        print("Skema sorting salah.")
+
 def list_game_toko():
     global id_game, nama_game, harga,tahun_rilis, kategori_game,stok,login_status,row_game
     if login_status == True:
@@ -444,7 +453,10 @@ def list_game_toko():
         stok_sort = stok
         sorting(skema_sorting,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort)
         for i in range(1,row_game):
-            print(str(i)+"."+ id_game_sort[i]+" | "+ nama_game_sort[i] + " | "+harga_sort[i] + " | " + kategori_game_sort[i] + " | " + tahun_rilis_sort[i] + " | " + stok_sort[i])
+            print(str(i)+"."+ id_game_sort[i]+" | "+ nama_game_sort[i],end = "") 
+            for j in range(40 - length(nama_game_sort[i])):
+                print(" ",end = "")
+            print(" | "+harga_sort[i] + " | " + kategori_game_sort[i] + " | " + tahun_rilis_sort[i] + " | " + stok_sort[i])
     else:
         print("Fitur ini memerlukan akses login.")
 
@@ -469,10 +481,12 @@ def buy_game():
                         bought = True
                         break
                 if bought == True:
-                    print("Anda sudah membeli game ini")
+                    print("Anda sudah memiliki game ini")
                 else:
                     if int(saldo[login_count]) - int(harga_game_beli) <0:
                         print("Saldo anda tidak cukup untuk membeli game tersebut!")
+                    if int(stok[game_index]) == 0:
+                        print("Maaf. Stok game sedang habis.")
                     else:
                         saldo[login_count] = int(saldo[login_count]) - int(harga_game_beli)
                         stok[game_index] = int(stok[game_index]) - 1
@@ -491,41 +505,252 @@ def buy_game():
     else:
         print("Fitur ini memerlukan akses login")
 
+# F09. Melihat game yang dimiliki
+
+def list_game():
+    global row_kepemilikan, id_game_kepemilikan, user_id_kepemilikan,id_game,nama_game,kategori_game,tahun_rilis,harga,id_user,login_count,login_status
+
+    if login_status == True:
+        if role[login_count] == "user":
+            game_owned = 0
+            for i in range(row_kepemilikan):
+                if user_id_kepemilikan[i] == id_user[login_count]:
+                    print("Daftar game: ")
+                    game_owned += 1
+                    for j in range(row_game):
+                        if id_game_kepemilikan[i] == id_game[j]:  
+                            print(str(game_owned)+". "+id_game[j]+" | "+nama_game[j]+" | "+kategori_game[j]+" | "+str(tahun_rilis[j])+" | "+str(harga[j]))
+            if game_owned == 0:
+                print("Anda tidak membeli game. Ketika beli_game untuk membeli game.")
+        else:
+            print("Hanya user yang dapat menggunakan fitur ini.")
+    else:
+        print("Fitur ini memerlukan akses login.")
+
+# F10. Mencari game yang dimiliki dari ID dan tahun rilis
+def data_game(id_game_list,tahun_rilis_list,game_index):
+    global row_kepemilikan, id_game_kepemilikan, user_id_kepemilikan,id_game,tahun_rilis,id_user,login_count
+
+    for i in range(row_kepemilikan):
+        if user_id_kepemilikan[i] == id_user[login_count]:
+            for j in range(row_game):
+                if id_game_kepemilikan[i] == id_game[j]:
+                    id_game_list += [id_game[j]]
+                    tahun_rilis_list += [tahun_rilis[j]]
+                    game_index += [j]
+    return id_game_list,tahun_rilis_list,game_index
+
+def search_my_game():
+    global role,login_count,login_status,id_game,id_game_kepemilikan,nama_game,tahun_rilis,harga,kategori_game
+    if login_status == True:
+        if role[login_count] == "user":
+            id_game_list = []
+            tahun_rilis_list = []
+            game_index = []
+            data_game(id_game_list,tahun_rilis_list,game_index)
+            game_owned = len(game_index)
+            id_game_search = input("Masukkan ID game yang ingin dicari: ")
+            tahun_rilis_search = input("Masukkan tahun rilis game: ")
+            found = False
+            count = 0
+            print("Daftar game yang memenuhi kriteria: ")
+            if tahun_rilis_search == "":
+                for i in range(game_owned):
+                    if id_game_search == id_game_list[i]:
+                        found = True
+                        count+=1
+                        print(str(count)+". "+id_game_list[i]+" | "+nama_game[game_index[i]]+" | "+str(harga[game_index[i]])+" | "+kategori_game[game_index[i]]+" | "+str(tahun_rilis_list[i]))
+            elif id_game_search == "":
+                for i in range(game_owned):
+                    if tahun_rilis_search == tahun_rilis_list[i]:
+                        found=True
+                        count+=1
+                        print(str(count)+". "+id_game_list[i]+" | "+nama_game[game_index[i]]+" | "+str(harga[game_index[i]])+" | "+kategori_game[game_index[i]]+" | "+str(tahun_rilis_list[i]))
+            elif id_game_search == "" and tahun_rilis_search == "":
+                found = True
+                list_game()
+            else:
+                for i in range(game_owned):
+                    if tahun_rilis_search == tahun_rilis_list[i] and id_game_search == id_game_list[i]:
+                        found = True
+                        count+=1
+                        print(str(count)+". "+id_game_list[i]+" | "+nama_game[game_index[i]]+" | "+str(harga[game_index[i]])+" | "+kategori_game[game_index[i]]+" | "+str(tahun_rilis_list[i]))
+            if found == False:
+                print("Tidak ada game yang memenuhi kriteria.")
+        else:
+            print("Hanya user yang dapat mengakses fitur ini.")
+    else:
+        print("Fitur ini memerlukan akses login")
+
+# F11. Mencari game di Toko
+
+def search_game_at_store():
+    global login_status,id_game,nama_game,harga,kategori_game,tahun_rilis,stok,row_game
+    if login_status == True:
+        id_game_search = input("Masukkan id game: ")
+        nama_game_search = input("Masukkan nama game: ")
+        harga_game_search = input("Masukkan harga game: ")
+        kategori_game_search = input("Masukkan kategori game: ")
+        tahun_rilis_search = input("Masukkan tahun rilis game: ")
+        count = 0
+        print("Game yang memenuhi kriteria: ")
+        for i in range(row_game):
+            match = True
+            if length(id_game_search)>0:
+                if id_game_search != id_game[i]:
+                    match = False
+            if length(nama_game_search)>0:
+                if nama_game_search != nama_game[i]:
+                    match = False
+            if length(harga_game_search)>0:
+                if harga_game_search != harga[i]:
+                    match = False
+            if length(kategori_game_search)>0:
+                if kategori_game_search != kategori_game[i]:
+                    match = False
+            if length(tahun_rilis_search)>0:
+                if tahun_rilis_search != tahun_rilis[i]:
+                    match = False
+            if match == True:
+                count+=1
+                print(str(count)+". "+id_game[i]+" | "+nama_game[i]+" | "+harga[i]+" | "+kategori_game[i]+" | "+tahun_rilis[i]+" | "+stok[i])
+        if count == 0:
+            print("Tidak ada yang memenuhi kriteria")
+    else:
+        print("Fitur ini memerlukan akses login.")
+
+# F12. Top up saldo
+def topup():
+    global login_status,login_count,role,saldo,username
+    if login_status == True:
+        if role[login_count] == "admin":
+            user_topup = input("Masukkan username: ")
+            topup = input("Masukkan saldo yang ingin diberikan: ")
+            if not(cek_int(topup)):
+                print("Masukan tidak valid")
+                return            
+            found = False
+            for i in range(row_user):
+                if user_topup == username[i]:
+                    found = True
+                    if int(saldo[i]) + int(topup)<0:
+                        print("Masukan tidak valid.")
+                    else:
+                        saldo[i] = int(saldo[i])+int(topup)
+                        print("Topup berhasil. Saldo",username[i],"menjadi",str(saldo[i]))
+            if found == False:
+                print('Username "',user_topup,'" tidak ditemukan.')
+        else:
+            print("Hanya admin yang dapat mengakses fitur ini.")
+    else:
+        print("Fitur ini memerlukan akses login")
+
+# F13. Melihat Riwayat Pembelian
+def riwayat():
+    global login_count,role,login_status,id_user,id_game,harga_riwayat,id_game_riwayat,user_id_riwayat,nama_game_riwayat,tahun_beli
+    if login_status == True:
+        if role[login_count] == "user":
+            print("Daftar game: ")
+            count = 0
+            for i in range(row_riwayat):
+                if id_user[login_count] == user_id_riwayat[i]:
+                    count += 1
+                    print(str(count)+". "+id_game_riwayat[i]+" | "+nama_game_riwayat[i],end="")
+                    for j in range(40-length(nama_game_riwayat[i])):
+                        print(" ",end="")
+                    print(" | "+str(harga_riwayat[i]),end = "")
+                    for j in range(10-int(length(harga_riwayat[i]))):
+                        print(" ",end="")
+                    print(" | "+str(tahun_beli[i])+" |")
+            if count == 0:
+                print("Anda tidak memiliki game. Ketik beli_game untuk membeli.")
+        else:
+            print("Hanya user yang dapat melihat riwayat pembelian.")
+    else:
+        print("Fitur ini memerlukan akses login")
+    
+# F13. Help
+def help():
+    global login_status,role,login_count
+    if login_status == True:
+        print("===========   HELP   ===========")
+        if role[login_count] == "admin":
+            print("1. register - Melakukan registrasi user baru")
+            print("2. login - Melakukan login ke dalam sistem")
+            print("3. tambah_game -  Menambah game ke dalam toko")
+            print("4. ubah_game - Mengubah properti game pada toko")
+            print("5. ubah_stok - Mengubah stok game dalam toko")
+            print("6. list_game_toko - Melihat semua game di dalam toko dan melakukan sorting")
+            print("7. search_game_at_store - Mencari game di toko dengan parameter opsional")
+            print("8. topup - Topup saldo user tertentu")
+            print("9. save - Menyimpan hasil aktivitas dalam program")
+            print("10. exit - Keluar dari program")
+        else:
+            print("1. login - Melakukan login dalam sistem.")
+            print("2. list_game_toko - Melihat daftar game di toko dan melakukan sorting")
+            print("3. buy_game - Membeli game di toko jika stok dan saldo mencukupi")
+            print("4. list_game - Melihat game yang dimiliki")
+            print('5. search_my_game - Mencari game yang dimiliki')
+            print("6. search_game_at_store - Mencari game di toko game dengan paramter opsional")
+            print("7. riwayat - Melihat riwayat pembelian game")
+            print("8. save - Menyimpan hasil aktivitas dalam program")
+            print("9. exit - Keluar dari program")
+    else:
+        print("Fitur ini memerlukan akses login")
+
+# F15. Load
+
 # Inisialisasi parsing file user.csv
-row_user = count_row(file_user)
-id_user = [0 for i in range(row_user)]
-username = [0 for i in range(row_user)]
-nama = [0 for i in range(row_user)]
-password = [0 for i in range(row_user)]
-role = [0 for i in range(row_user)]
-saldo = [0 for i in range(row_user)]
-parsing_file1("user.csv",id_user,username,nama,password,role,saldo)
+data_path = os.path.join(current_dir,args.datafolder,"user.csv")
+with open(data_path,'r') as f:
+    row_user = count_row(f)
+    row_game = 0
+    row_user_temp = row_user
+    id_user = [0 for i in range(row_user)]
+    username = [0 for i in range(row_user)]
+    nama = [0 for i in range(row_user)]
+    password = [0 for i in range(row_user)]
+    role = [0 for i in range(row_user)]
+    saldo = [0 for i in range(row_user)]
+    parsing_file1(f,id_user,username,nama,password,role,saldo)
 
 # Inisialisasi parsing file game.csv
-row_game = count_row(file_game)
-id_game = [0 for i in range(row_game)]
-nama_game = [0 for i in range(row_game)]
-kategori_game = [0 for i in range(row_game)]
-tahun_rilis = [0 for i in range(row_game)]
-harga = [0 for i in range(row_game)]
-stok = [0 for i in range(row_game)]
-parsing_file1("game.csv",id_game,nama_game,kategori_game,tahun_rilis,harga,stok)
+data_path = os.path.join(current_dir,args.datafolder,"game.csv")
+with open(data_path,'r') as f:
+    row_game = count_row(f)
+    row_user = 0
+    id_game = [0 for i in range(row_game)]
+    nama_game = [0 for i in range(row_game)]
+    kategori_game = [0 for i in range(row_game)]
+    tahun_rilis = [0 for i in range(row_game)]
+    harga = [0 for i in range(row_game)]
+    stok = [0 for i in range(row_game)]
+    parsing_file1(f,id_game,nama_game,kategori_game,tahun_rilis,harga,stok)
+row_user = row_user_temp
 
 # Inisialisasi parsing file riwayat.csv
-row_riwayat = count_row(file_riwayat)
-id_game_riwayat = [0 for i in range(row_riwayat)]
-nama_game_riwayat = [0 for i in range(row_riwayat)]
-harga_riwayat = [0 for i in range(row_riwayat)]
-user_id_riwayat = [0 for i in range(row_riwayat)]
-tahun_beli = [0 for i in range(row_riwayat)]
-parsing_file2(id_game_riwayat,nama_game_riwayat,harga_riwayat,user_id_riwayat,tahun_beli)
+data_path = os.path.join(current_dir,args.datafolder,"riwayat.csv")
+with open(data_path,'r') as f:
+    row_riwayat = count_row(f)
+    id_game_riwayat = [0 for i in range(row_riwayat)]
+    nama_game_riwayat = [0 for i in range(row_riwayat)]
+    harga_riwayat = [0 for i in range(row_riwayat)]
+    user_id_riwayat = [0 for i in range(row_riwayat)]
+    tahun_beli = [0 for i in range(row_riwayat)]
+    parsing_file2(id_game_riwayat,nama_game_riwayat,harga_riwayat,user_id_riwayat,tahun_beli)
 
 # Inisialisasi parsing file kepemilikan.csv
-row_kepemilikan = count_row(file_kepemilikan)
-id_game_kepemilikan = [0 for i in range(row_kepemilikan)]
-user_id_kepemilikan = [0 for i in range(row_kepemilikan)]
-parsing_file3(id_game_kepemilikan,user_id_kepemilikan)
+data_path = os.path.join(current_dir,args.datafolder,"kepemilikan.csv")
+with open(data_path,'r') as f:
+    row_kepemilikan = count_row(f)
+    id_game_kepemilikan = [0 for i in range(row_kepemilikan)]
+    user_id_kepemilikan = [0 for i in range(row_kepemilikan)]
+    parsing_file3(id_game_kepemilikan,user_id_kepemilikan)
 
+# F16. Save
+
+
+# Algoritma Utama
 login_count = -1 # Menandakan belum login sehingga tidak ada posisi di list
 login_status = False # Menandakan belum login
 
@@ -545,4 +770,16 @@ while True:
         list_game_toko()
     elif perintah.lower() == "buy_game":
         buy_game()
+    elif perintah.lower() == "list_game":
+        list_game()
+    elif perintah.lower() == "search_my_game":
+        search_my_game()
+    elif perintah.lower() == "search_game_at_store":
+        search_game_at_store()
+    elif perintah.lower() == "topup":
+        topup()
+    elif perintah.lower() == "riwayat":
+        riwayat()
+    elif perintah.lower() == "help":
+        help()
     perintah = input("Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada \n")
