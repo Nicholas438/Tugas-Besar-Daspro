@@ -454,7 +454,7 @@ def ubah_stok():
         print("Fitur perlu akses login")                            # Pesan error mengubah stok tanpa login
 
 # F07. Listing game
-def sort_ascending(obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
+def sort_ascending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
     # Mengsortir list dari kecil ke besar menggunakan selection sort
 
     # Kamus lokal
@@ -467,8 +467,12 @@ def sort_ascending(obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_
     for j in range(1,row_game):
         count_min = j                       # Penentuan elemen terkecil
         for i in range(j+1,row_game):
-            if obj[i]<obj[count_min]:
-                count_min = i 
+            if skema == "harga+":
+                if int(obj[i])<int(obj[count_min]):
+                    count_min = i 
+            else:
+                if obj[i]<obj[count_min]:
+                    count_min = i 
         if count_min != j:                  # Mengubah elemen terkecil menjadi elemen ke-j jika elemen terkecil bukan elemen ke-j
             obj[j],obj[count_min] = obj[count_min],obj[j]
             nama_game_sort[j],nama_game_sort[count_min] = nama_game_sort[count_min],nama_game_sort[j]
@@ -478,7 +482,7 @@ def sort_ascending(obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_
             stok_sort[j],stok_sort[count_min] = stok_sort[count_min],stok_sort[j]
     return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort 
 
-def sort_descending(obj1,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
+def sort_descending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
     # Mengurutkan list dari besar ke kecil menggunakan selection sort
     # Kamus Lokal
     # count_max,j,i: int
@@ -490,17 +494,21 @@ def sort_descending(obj1,obj2,nama_game_sort,id_game_sort,kategori_game_sort,sto
     for j in range(1,row_game):
         count_max = j                       # Pencarian elemen maximum
         for i in range(j+1,row_game):
-            if obj1[count_max]<obj1[i]:
-                count_max = i 
-        obj1[j],obj1[count_max] = obj1[count_max],obj1[j]               # Penukaran elemen
+            if skema == "harga-":
+                if int(obj[i])<int(obj[count_min]):
+                    count_min = i 
+            else:
+                if obj[i]<obj[count_min]:
+                    count_min = i 
+        obj[j],obj[count_max] = obj[count_max],obj[j]               # Penukaran elemen
         nama_game_sort[j],nama_game_sort[count_max] = nama_game_sort[count_max],nama_game_sort[j]
         id_game_sort[j],id_game_sort[count_max] = id_game_sort[count_max],id_game_sort[j]
         obj2[j],obj2[count_max] = obj2[count_max],obj2[j]
         kategori_game_sort[j],kategori_game_sort[count_max] = kategori_game_sort[count_max],kategori_game_sort[j]
         stok_sort[j],stok_sort[count_max] = stok_sort[count_max],stok_sort[j]
-    return obj1,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort   
+    return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort   
 
-def sorting(skema,nama_game_sort,tahun_rilis_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort):
+def sorting(skema,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort):
     # Melakukan sorting sesuai dengan fungsi sort ascending dan descending
     
     # Kamus Lokal
@@ -510,17 +518,17 @@ def sorting(skema,nama_game_sort,tahun_rilis_sort,id_game_sort,harga_sort,katego
     
     # Algoritma
     if skema == "tahun+":
-        sort_ascending(nama_game_sort,harga_sort,tahun_rilis_sort,id_game_sort,kategori_game_sort,stok_sort)
+        sort_ascending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
     elif skema == "tahun-":
-        sort_descending(nama_game_sort,harga_sort,tahun_rilis_sort,id_game_sort,kategori_game_sort,stok_sort)
+        sort_descending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
     elif skema == "harga+":
-        sort_ascending(harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+        sort_ascending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
     elif skema == "harga-":
-        sort_descending(harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+        sort_descending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
     elif skema == "":                       # Tersortir sesuai id game jika skema kosong
-        return
-    else:                                   # Pesan error skema tidak sesuai
-        print("Skema sorting salah.")
+        sort_ascending(skema,id_game_sort,tahun_rilis_sort,nama_game_sort,harga_sort,kategori_game_sort,stok_sort)
+    else:                                   # Pesan error skema tidak sesua
+        return False
 
 def list_game_toko():
     # Mengeluarkan info semua game di toko dengan skema sortingannya
@@ -545,16 +553,21 @@ def list_game_toko():
         stok_sort = stok
         sorting(skema_sorting,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort)
         for i in range(1,row_game):
-            print(str(i)+"."+ id_game_sort[i]+" | "+ nama_game_sort[i],end = "")        # Memprint hasil 
-            for j in range(40 - length(nama_game_sort[i])):
-                print(" ",end = "")
-            print(" | "+harga_sort[i],end ="") 
-            for j in range(10 - length(harga_sort[i])):
-                print(" ",end = "")
-            print(" | " + kategori_game_sort[i],end = "")
-            for j in range(20 - length(kategori_game_sort[i])):
-                print(" ",end = "")
-            print(" | " + tahun_rilis_sort[i] + " | " + stok_sort[i])
+            if sorting(skema_sorting,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort) == False:
+                print('Skema sorting salah.')
+                break
+            else:
+                print(str(i)+"."+ id_game_sort[i]+" | "+ nama_game_sort[i],end = "")        # Memprint hasil 
+                for j in range(40 - length(nama_game_sort[i])):
+                    print(" ",end = "")
+                print(" | "+harga_sort[i],end ="") 
+                for j in range(10 - length(harga_sort[i])):
+                    print(" ",end = "")
+                print(" | " + kategori_game_sort[i],end = "")
+                for j in range(20 - length(kategori_game_sort[i])):
+                    print(" ",end = "")
+                print(" | " + tahun_rilis_sort[i] + " | " + stok_sort[i])
+                sorting("",tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort)
     else:
         print("Fitur ini memerlukan akses login.")
 
@@ -889,6 +902,10 @@ parser.add_argument("datafolder",help = "Folder tempat data.csv")
 args = parser.parse_args()
 current_dir = os.getcwd()
 found = False
+# Keluar dari program jika folder tidak ditemukan
+if not(os.path.isdir(args.datafolder)):
+    print("Folder tidak ditemukan")
+    quit()
 
 # Inisialisasi parsing file user.csv
 data_path = os.path.join(current_dir,args.datafolder,"user.csv")
@@ -948,6 +965,12 @@ def save():
 
     if login_status == True:
         # Penyimpanan file user.csv
+        
+        # Membuat folder baru
+        args.datafolder = input("Dimanakah kamu ingin menyimpan file savenya? ")
+        if not(os.path.isdir(args.datafolder)):
+            os.makedirs(args.datafolder)
+
         data_path = os.path.join(current_dir,args.datafolder,"user.csv")
         with open(data_path,"w") as f:
             for i in range(row_user):
@@ -983,6 +1006,7 @@ def save():
                 else:
                     write_riwayat = id_game_riwayat[i]+";"+nama_game_riwayat[i]+";"+harga_riwayat[i]+";"+user_id_riwayat[i]+";"+tahun_beli[i]
                 f.writelines(write_riwayat)
+        print("Data berhasil disimpan!")
     else:
         # Pesan error tanpa login
         print("Fitur ini memerlukan akses login")
@@ -996,8 +1020,8 @@ def exit():
     global login_status
 
     # Algoritma
-    save_command = input("Apakah Anda ingin melakukan save sebelum exit? (Y/N) ") # Input jika user ingin menyimpan data
     if login_status == True:
+        save_command = input("Apakah Anda ingin melakukan save sebelum exit? (Y/N) ") # Input jika user ingin menyimpan data
         if save_command == "Y" or save_command == "y":
             save()              # Save jika user ingin menyimpan data
             quit()              # Keluar program
