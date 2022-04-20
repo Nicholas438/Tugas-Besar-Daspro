@@ -897,6 +897,7 @@ def help():
             print("14. exit - Keluar dari program")
 
 # F15. Load
+# Melakukan loading folder dan mengtransfer data ke dalam list saat program dipanggil
 parser = argparse.ArgumentParser()
 parser.add_argument("datafolder",help = "Folder tempat data.csv")
 args = parser.parse_args()
@@ -1030,6 +1031,156 @@ def exit():
     else:
         quit()
 
+# Bonus 3
+# Tic Tac Toe
+def winning_condition(papan,pemain):
+    # Melihat jika salah satu pemain sudah menang dalam tic tac toe
+    # Menang diagonal
+    
+    # Kamus Lokal
+    # papan: array of array of char
+    # pemain: char
+    # win: Bool
+    # i: int
+
+    win = False
+    if papan[1][1] == pemain and ((papan[0][0] == pemain and papan[2][2] == pemain) or (papan[0][2] == pemain and papan [2][0]== pemain)):
+        win = True
+    # Menang horizontal
+    for i in range(3):
+        if papan[0][i] == pemain and papan[1][i] == pemain and papan[2][i] == pemain:
+            win = True
+    # Menang vertikal
+    for i in range(3):
+        if papan[i][0] == pemain and papan[i][1] == pemain and papan[i][2] == pemain:
+            win = True
+    return win
+
+def cek_grid(papan):
+    # Mengecek jika grid yang diinput di papan tic tac toe sudah digunakan
+    
+    # Kamus Lokal
+    # papan: array of array of char
+    # x,y: int
+    global x,y
+    
+    # Memeriksa jika grid tic tac toe sudah terisi
+    if papan[x-1][y-1] == "O" or papan[x-1][y-1] == "X":
+        return True
+
+def input_tic_tac_toe(papan,pemain):
+    # Proses menginput pemain pada grid tic tac toe
+
+    # Kamua lokal
+    # pemain = char
+    # papan: array of array of char
+    # x,y: it
+    # valid_matrix,valid_int : Bool
+    global x,y
+
+    # Algoritma
+    # Input
+    print("Giliran pemain",pemain,": ")
+    valid_matrix = False
+
+    # Validasi input
+    while not(valid_matrix):
+        x = input("Masukkan komponen x(1-3): ")
+        y = input("Masukkan komponen y(1-3): ")
+        # Jika x atau y bukan int
+        if not(cek_int(str(x))) or not(cek_int(str(y))):
+            valid_int = False
+        else:
+            valid_int = True
+        if valid_int == True:
+            # Jika x dan y sesuai matriks 3x3
+            if (1<=int(x)<=3):
+                if (1<=int(y)<=3):
+                    valid_matrix = True
+                else:
+                    valid_matrix = False
+            else:
+                valid_matrix = False
+        else:
+            valid_matrix = False
+    x = int(x)
+    y = int(y)
+    return papan
+    
+
+def print_papan(papan):
+    # Memprint papan tic tac toe
+
+    # Kamus Lokal
+    # i,j: int
+    # papan: array of array of char
+
+    # Algoritma
+    for i in range(3):
+        for j in range(3):
+            print(papan[j][i],end = "")
+        print("")
+
+x,y = -1,-1
+def tic_tac_toe():
+    # Melaksanakan game tic tac toe
+
+    # Kamus Lokal
+    # papan: array of array of char
+    # x,y: int
+    # count: int
+    global x,y
+
+    # Algoritma
+    if login_status == True:
+        # Inisialisasi papan
+        papan = [["#" for i in range(3)]for j in range(3)]
+        # Input pemain x dan input ke dalam papan
+        input_tic_tac_toe(papan,"X")
+        papan[x-1][y-1] = "X"
+        # Reset variabel x dan y
+        x,y = 0,0
+        # Memprint isi papan
+        print_papan(papan)
+        # Print count jika pada kasus permainan seri
+        count = 0
+        # Range 4 karena hanya ada 9 kali gerakan
+        # 1 di atas tambah 2x4 = 9
+        for i in range(4):
+            # Penambahan count setiap kali loop diulang
+            count+=1
+            # Input O dan validasinya
+            input_tic_tac_toe(papan,"O")
+            # Jika grid inputan sudah terisi
+            while cek_grid(papan):
+                print("Grid sudah terisi")
+                input_tic_tac_toe(papan,"O")
+            # Input ke dalam papan
+            papan[x-1][y-1] = "O"
+            # Reset variabel
+            x,y = 0,0
+            print_papan(papan)
+            # Cek kemenangan
+            if winning_condition(papan,"O"):
+                print("Selamat. Pemain O menang")
+                break
+            # Hal yang sama juga dilakukan pada pemain X
+            input_tic_tac_toe(papan,"X")
+            while cek_grid(papan):
+                print("Grid sudah terisi")
+                input_tic_tac_toe(papan,"X")
+            papan[x-1][y-1] = "X"
+            x,y = 0,0
+            print_papan(papan)
+            if winning_condition(papan,"X"):
+                print("Selamat. Pemain X menang")
+                break
+        if count == 4:
+            # Jika permainan seri
+            print("Permainan berakhir seri.")
+    else:   # Pesan error tic tac toe tanpa login
+        print("Fitur ini memerlukan akses login")
+
 
 # Algoritma Utama
 login_count = -1 # Menandakan belum login sehingga tidak ada posisi di list
@@ -1067,6 +1218,9 @@ while True:                 # Pengulangan selama belum dilakukan exit
         save()
     elif perintah.lower() == "exit":
         exit()
+    elif perintah.lower() == "tic_tac_toe":
+        tic_tac_toe()
     else:
         print("Perintah salah. Silahkan menginput ulang.")          # Pesan error salah perintah
+    
     perintah = input("Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada \n")       # Pengulangan perintah/saat login
