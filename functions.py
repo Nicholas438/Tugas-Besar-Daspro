@@ -13,7 +13,7 @@ def count_row(file):
         rowcount+= 1
     return rowcount
 
-def length(sentence):
+def length_sentence(sentence):
     # Menghitung panjang dari suatu string
 
     # Kamus Lokal
@@ -22,7 +22,17 @@ def length(sentence):
 
     # Algoritma
     len = 0
+    sentence_list = []
     for i in sentence:
+        sentence_list += [i]
+    len = 0
+    for i in sentence_list:
+        len+=1
+    return len
+
+def length_list(list):
+    len = 0
+    for i in list:
         len+=1
     return len
 
@@ -43,7 +53,7 @@ def validitas_username(username):
 
     # Algoritma
     username_valid = True               # Inisialisasi validitas sebagai True
-    for i in range(length(username)):   # Iteritas sepanjang length username
+    for i in range(length_sentence(username)):   # Iteritas sepanjang length username
         if ord(username[i])<45 or 45<ord(username[i])<48 or 57<ord(username[i])<65 or 90<ord(username[i])<95 or ord(username[i])==96 or ord(username[i])>122:
             username_valid = False      # Jika ditemukan karakter tidak sesuai maka dikembalikan false
             break
@@ -57,8 +67,8 @@ def cek_int(number):
     # i: int
 
     # Algoritma
-    for i in range(length(number)):
-        if not(48<=ord(number[i])<=57):
+    for i in range(length_sentence(number)):
+        if not(48<=ord(number[i])<=57) and not(ord(number[i]) == 45):
             return False                # Jika salah satu karakter bukanlah nomor maka akan direturn False
     return True
 
@@ -198,3 +208,23 @@ def print_papan(papan):
         for j in range(3):
             print(papan[j][i],end = "")
         print("")
+
+# Untuk Bonus 2. Magic Conch Shell
+def response_generator(n,a,c,m):
+    n = (a*n+c)%(m)
+    bit = n%7
+    if bit%7 == 0:
+        print("Mungkin")
+    elif bit%7 == 1:
+        print("Iya")
+    elif bit%7 == 2:
+        print("Tidak")
+    elif bit%7 == 3:
+        print("Bisa Jadi")
+    elif bit%7 == 4:
+        print("Maaf Magic Conch Shell tidak tersedia. Silahkan membeli Game Pengosong Dompet biar Magic Conch Shell bisa \njajan")
+    elif bit%7 == 5:
+        print("Tidak tahu")
+    elif bit%7 == 6:
+        print("Magic Conch Shell lagi mager")
+    return n
