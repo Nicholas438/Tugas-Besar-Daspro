@@ -4,6 +4,7 @@
 # Import library
 import argparse
 import os
+import datetime
 from functions import *
 # Daftar fungsi dan prosedur
 
@@ -15,7 +16,6 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
     # Kamus Lokal
     # count,i : int
     # id,var1,var2,var3,var4,var5: array of string
-    global row_user,row_game
     with open(data_path,'r') as f:
         Lines = f.readlines()
     
@@ -24,7 +24,7 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
     for line in Lines:      # Iterasi sepanjang list
         id[count] = ""      # Pengosongan data pada list yang awalnya 0
         i = 0
-        while i<length(line):           # Penginputan data pertama ke dalam list
+        while i<length_sentence(line):           # Penginputan data pertama ke dalam list
             if line[i] !=";":
                 id[count]+=line[i]
                 i+=1
@@ -32,7 +32,7 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
                 break
         i+=1
         var1[count] = ""                
-        while i<length(line):           # Penginputan data kedua ke dalam list
+        while i<length_sentence(line):           # Penginputan data kedua ke dalam list
             if line[i] !=";":
                 var1[count]+=line[i]
                 i+=1
@@ -40,7 +40,7 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
                 break
         i+=1
         var2[count] = ""
-        while i<length(line):           # Penginputan data ketiga dalam list
+        while i<length_sentence(line):           # Penginputan data ketiga dalam list
             if line[i] !=";":
                 var2[count]+=line[i]
                 i+=1
@@ -48,7 +48,7 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
                 break
         i+=1
         var3[count] = ""
-        while i<length(line):           # Penginputan data keempat dalam list
+        while i<length_sentence(line):           # Penginputan data keempat dalam list
             if line[i] !=";":
                 var3[count]+=line[i]
                 i+=1
@@ -56,7 +56,7 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
                 break
         i+=1
         var4[count] = ""
-        while i<length(line):           # Penginputan data kelima ke dalam list
+        while i<length_sentence(line):           # Penginputan data kelima ke dalam list
             if line[i] !=";":
                 var4[count]+=line[i]
                 i+=1
@@ -65,14 +65,14 @@ def parsing_file1(file,id,var1,var2,var3,var4,var5):
         i+=1
         var5[count] =  ""               # Penginputan data keenam dalam list
         if count != (row_user-1) and count != (row_game-1):     # Jika bukan row terakhir \n dihapus dari elemen
-            while i<(length(line)-1):
+            while i<(length_sentence(line)-1):
                 if line[i] !=";":
                     var5[count]+=line[i]
                     i+=1
                 else:
                     break
         elif count == (row_user-1) or count == (row_game-1):    # Jika row terakhir maka harus berbeda agar karakter terakhir tidak dihapus
-            while i<(length(line)):
+            while i<(length_sentence(line)):
                 if line[i] !=";":
                     var5[count]+=line[i]
                     i+=1
@@ -95,7 +95,7 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
     for line in Lines:
         id_game_riwayat[count] = ""
         i = 0
-        while i<length(line):
+        while i<length_sentence(line):
             if line[i] !=";":
                 id_game_riwayat[count]+=line[i]
                 i+=1
@@ -103,7 +103,7 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
                 break
         i+=1
         var1[count] = ""
-        while i<length(line):
+        while i<length_sentence(line):
             if line[i] !=";":
                 var1[count]+=line[i]
                 i+=1
@@ -111,7 +111,7 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
                 break
         i+=1
         var2[count] = ""
-        while i<length(line):
+        while i<length_sentence(line):
             if line[i] !=";":
                 var2[count]+=line[i]
                 i+=1
@@ -119,7 +119,7 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
                 break
         i+=1
         var3[count] = ""
-        while i<length(line):
+        while i<length_sentence(line):
             if line[i] !=";":
                 var3[count]+=line[i]
                 i+=1
@@ -128,14 +128,14 @@ def parsing_file2(id_game_riwayat,var1,var2,var3,var4):
         i+=1
         var4[count] = ""
         if count != (row_riwayat-1):
-            while i<(length(line)-1):
+            while i<(length_sentence(line)-1):
                 if line[i] !=";":
                     var4[count]+=line[i]
                     i+=1
                 else:
                     break
         else:
-            while i<length(line):
+            while i<length_sentence(line):
                 if line[i] !=";":
                     var4[count]+=line[i]
                     i+=1
@@ -158,7 +158,7 @@ def parsing_file3(id_game_kepemilikan,var1):
     for line in Lines:
         i = 0
         id_game_kepemilikan[count] = ""
-        while i<length(line):
+        while i<length_sentence(line):
             if line[i] !=";":
                 id_game_kepemilikan[count]+=line[i]
                 i+=1
@@ -167,14 +167,14 @@ def parsing_file3(id_game_kepemilikan,var1):
         i+=1
         var1[count] = ""
         if count != (row_kepemilikan-1):
-            while i<(length(line)-1):
+            while i<(length_sentence(line)-1):
                 if line[i] !=";":
                     var1[count]+=line[i]
                     i+=1
                 else:
                     break
         else:
-            while i<(length(line)):
+            while i<(length_sentence(line)):
                 if line[i] !=";":
                     var1[count]+=line[i]
                     i+=1
@@ -201,7 +201,7 @@ def login():
         login_password = str(input("Masukkan password: "))
         # Pencarian username
         username_found = False              # Inisialisasi
-        for i in range(len(username)):
+        for i in range(length_list(username)):
             if login_username == username[i]:   # Proses jika ditemukan username
                 username_found = True
                 if password[i] == login_password:   # Pengecekan password
@@ -225,7 +225,7 @@ def register():
 
     # Kamus Lokal
     # register_nama,register_username: string
-    global role,login_count,username,nama,password,saldo,row_user
+    global role,id_user,username,nama,password,saldo,row_user
 
     # Algoritma
     if login_status == True:
@@ -239,12 +239,13 @@ def register():
             register_password = input("Masukkan password: ")
 
             username_used = False                                       # Inisialisasi pengecekan apakah username terpakai
-            for i in range(len(username)):
+            for i in range(length_list(username)):
                 if register_username == username[i]:                    
                     print("Username terpakai. Silahkan menggunakan username lain.")     # Pesan error username terpakai
                     username_used = True
                     break
             if username_used == False:                                  # Peregisteran user ke dalam list
+                id_user += [row_user]
                 namatemp = [register_nama]
                 nama += namatemp
                 usernametemp = [register_username]
@@ -266,7 +267,7 @@ def tambah_game():
 
     # Kamus Lokal
     # nama_game_baru,kategori_game_baru,tahun_rilis_baru,harga_baru,stok_baru,nomor_game : string
-    global role,login_count,id_game,nama_game,kategori_game,tahun_rilis,harga,stok,row_game
+    global id_game,nama_game,kategori_game,tahun_rilis,harga,stok,row_game
     
     # Algoritma
     if login_status == True:
@@ -324,7 +325,7 @@ def ubah_game():
     # id_game_ubah,nama_game_ubah,kategori_game_ubah,tahun_rilis_ubah,harga_ubah: string
     # id_game_found :Bool
     # i: int
-    global login_status,role,login_count,id_game,nama_game,kategori_game,tahun_rilis,harga,stok,id_game_riwayat,nama_game_riwayat,harga_riwayat
+    global id_game,nama_game,kategori_game,tahun_rilis,harga,stok,id_game_riwayat,nama_game_riwayat,harga_riwayat
     
     # Algoritma
     if login_status == True:
@@ -370,7 +371,7 @@ def ubah_stok():
     # stok_id_game,stok_ubah: string
     # id_game_found: Bool
     # i : int
-    global login_status,role,login_count,stok,id_game,nama_game
+    global stok,id_game,nama_game
     
     # Algoritma
     if login_status == True:
@@ -381,11 +382,12 @@ def ubah_stok():
             valid_input(stok_ubah,"Stok","jumlah")          # Validitas cek integer input
             id_game_found = False
             for i in range(row_game):
-                if stok_id_game == id_game[i]:              # Pencarian game
+                if stok_id_game == id_game[i]:           # Pencarian game
                     id_game_found = True
                     if (int(stok[i]) + int(stok_ubah))>= 0:         # Pengubahan stok game
                         stok[i] = int(stok[i]) + int(stok_ubah)
                         print("Selamat, stok game",nama_game[i],"sudah diupdate.")
+                        break
                     else:
                         print("Stok game tidak bisa negatif")       # Pesan error jika mencoba mengubah stok gam menjadi negatif
             if id_game_found == False:
@@ -403,7 +405,7 @@ def list_game_toko():
     # skema: string
     # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
     # i: int
-    global id_game, nama_game, harga,tahun_rilis, kategori_game,stok,login_status,row_game
+    global id_game, nama_game, harga,tahun_rilis, kategori_game,stok
     
     # Algoritma
     if login_status == True:
@@ -424,13 +426,13 @@ def list_game_toko():
                 break
             else:
                 print(str(i)+"."+ id_game_sort[i]+" | "+ nama_game_sort[i],end = "")        # Memprint hasil 
-                for j in range(40 - length(nama_game_sort[i])):
+                for j in range(40 - length_sentence(nama_game_sort[i])):
                     print(" ",end = "")
                 print(" | "+harga_sort[i],end ="") 
-                for j in range(10 - length(harga_sort[i])):
+                for j in range(10 - length_sentence(harga_sort[i])):
                     print(" ",end = "")
                 print(" | " + kategori_game_sort[i],end = "")
-                for j in range(20 - length(kategori_game_sort[i])):
+                for j in range(20 - length_sentence(kategori_game_sort[i])):
                     print(" ",end = "")
                 print(" | " + tahun_rilis_sort[i] + " | " + stok_sort[i])
                 sorting("",tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort)
@@ -446,7 +448,7 @@ def buy_game():
     # id_game_beli : string
     # bought: Bool
     # harga_game_beli,nama_game_beli: string
-    global id_game,id_game_kepemilikan,id_user,user_id_kepemilikan,row_game,row_kepemilikan,login_count,login_status,role,saldo,stok,nama_game,id_game_riwayat,nama_game_riwayat,user_id_riwayat,harga_riwayat,tahun_beli
+    global id_game,id_game_kepemilikan,id_user,user_id_kepemilikan,row_game,row_kepemilikan,saldo,stok,nama_game,id_game_riwayat,nama_game_riwayat,user_id_riwayat,harga_riwayat,tahun_beli,row_riwayat,row_kepemilikan
     
     # Algoritma
     if login_status == True:
@@ -464,7 +466,7 @@ def buy_game():
             if found == True:
                 bought = False
                 for i in range(row_kepemilikan):            # Mencari game di kepemilikan
-                    if user_id_kepemilikan[i] == role[login_count] and id_game_kepemilikan[i] == id_game_beli:
+                    if user_id_kepemilikan[i] == id_user[login_count] and id_game_kepemilikan[i] == id_game_beli:
                         bought = True
                         break
                 if bought == True:      # Pesan error jika game sudah dimiliki
@@ -472,8 +474,10 @@ def buy_game():
                 else:                   
                     if int(saldo[login_count]) - int(harga_game_beli) <0:       # Pesan error jika saldo tidak cukup
                         print("Saldo anda tidak cukup untuk membeli game tersebut!")
+                        return
                     if int(stok[game_index]) == 0:
                         print("Maaf. Stok game sedang habis.")                  # Pesan error jika stok 0
+                        return
                     else:
                         # Penambahan kepemilikan game ke database
                         saldo[login_count] = int(saldo[login_count]) - int(harga_game_beli)
@@ -484,6 +488,8 @@ def buy_game():
                         harga_riwayat += [harga_game_beli]
                         user_id_riwayat += [id_user[login_count]]
                         nama_game_riwayat += [nama_game_beli]
+                        row_riwayat+=1
+                        row_kepemilikan+=1
                         tahun_beli += [2022] # Diganti per tahun 
                         print("Selamat.",nama_game_beli,"berhasil dibeli!")
             else:           # Pesan error game tidak ditemukan
@@ -500,23 +506,23 @@ def list_game():
     # Kamus Lokal
     # game_owned: int
     # i,j: int
-    global row_kepemilikan, id_game_kepemilikan, user_id_kepemilikan,id_game,nama_game,kategori_game,tahun_rilis,harga,id_user,login_count,login_status
+    global row_kepemilikan, id_game_kepemilikan, user_id_kepemilikan,id_game,nama_game,kategori_game,tahun_rilis,harga,id_user
 
     # Algoritma
     if login_status == True:
         if role[login_count] == "user":
             game_owned = 0                  # Penanda berapa game yang dimiliki
+            print("Daftar game: ")
             for i in range(row_kepemilikan):
                 if user_id_kepemilikan[i] == id_user[login_count]:          # Mencari id user dalam data kepemilikan
-                    print("Daftar game: ")
                     game_owned += 1
                     for j in range(row_game):
                         if id_game_kepemilikan[i] == id_game[j]:            # Pencarian id game pada data game.csv
                             print(str(game_owned)+". "+id_game[j]+" | "+nama_game[j],end = "")      # Print data
-                            for k in range(40-length(nama_game[j])):
+                            for k in range(40-length_sentence(nama_game[j])):
                                 print(" ",end = "")
                             print(" | "+kategori_game[j],end = "")
-                            for k in range(20 - length(kategori_game[i])):
+                            for k in range(20 - length_sentence(kategori_game[j])):
                                 print(" ",end = "")
                             print(" | "+str(tahun_rilis[j])+" | "+str(harga[j]))
             if game_owned == 0:         # Pesan error tidak ada game
@@ -535,7 +541,7 @@ def search_my_game():
     #game_index: array of int
     # game_owned,i: int
     # id_game_search,tahun_rilis_search: string
-    global role,login_count,login_status,id_game,id_game_kepemilikan,nama_game,tahun_rilis,harga,kategori_game
+    global id_game,id_game_kepemilikan,nama_game,tahun_rilis,harga,kategori_game
     
     # Algoritma
     if login_status == True:
@@ -544,7 +550,7 @@ def search_my_game():
             tahun_rilis_list = []
             game_index = []
             data_game(id_game_list,tahun_rilis_list,game_index)         # Pendataan game yang dimiliki user
-            game_owned = len(game_index)
+            game_owned = length_list(game_index)
             # Input
             id_game_search = input("Masukkan ID game yang ingin dicari: ")
             tahun_rilis_search = input("Masukkan tahun rilis game: ")
@@ -587,7 +593,7 @@ def search_game_at_store():
     # Kamus Lokal
     # id_game_search,nama_game_search,harga_game_search,kategori_game_search,tahun_rilis_search: string
     # match: Bool
-    global login_status,id_game,nama_game,harga,kategori_game,tahun_rilis,stok,row_game
+    global id_game,nama_game,harga,kategori_game,tahun_rilis,stok,row_game
     
     # Algoritma
     if login_status == True:
@@ -601,31 +607,31 @@ def search_game_at_store():
         print("Game yang memenuhi kriteria: ")
         for i in range(row_game):
             match = True
-            if length(id_game_search)>0:                # Pencarian berdasarkan id game
+            if length_sentence(id_game_search)>0:                # Pencarian berdasarkan id game
                 if id_game_search != id_game[i]:
                     match = False
-            if length(nama_game_search)>0:              # Pencarian berdasarkan nama game
+            if length_sentence(nama_game_search)>0:              # Pencarian berdasarkan nama game
                 if nama_game_search != nama_game[i]:
                     match = False
-            if length(harga_game_search)>0:             # Pencarian berdasarkan harga game
+            if length_sentence(harga_game_search)>0:             # Pencarian berdasarkan harga game
                 if harga_game_search != harga[i]:
                     match = False
-            if length(kategori_game_search)>0:          # Pencarian berdasarkan kategori game
+            if length_sentence(kategori_game_search)>0:          # Pencarian berdasarkan kategori game
                 if kategori_game_search != kategori_game[i]:
                     match = False
-            if length(tahun_rilis_search)>0:            # Pencarian berdasarkan tahun rilis
+            if length_sentence(tahun_rilis_search)>0:            # Pencarian berdasarkan tahun rilis
                 if tahun_rilis_search != tahun_rilis[i]:
                     match = False
             if match == True:
                 count+=1                                # output
                 print(str(count)+". "+id_game[i]+" | "+nama_game[i],end = "")
-                for j in range(40-length(nama_game[i])):
+                for j in range(40-length_sentence(nama_game[i])):
                     print(" ",end = "")
                 print(" | "+harga[i],end = "")
-                for j in range(10 - length(harga[i])):
+                for j in range(10 - length_sentence(harga[i])):
                     print(" ",end = "")
                 print(" | "+kategori_game[i],end = "")
-                for j in range(20 - length(kategori_game[i])):
+                for j in range(20 - length_sentence(kategori_game[i])):
                     print(" ",end = "")
                 print(" | "+tahun_rilis[i]+" | "+stok[i])
         if count == 0:              # Pesan error tidak ditemukan search
@@ -640,7 +646,7 @@ def topup():
     # Kamus Lokal
     # user_topup,topup: string
     # found : Bool
-    global login_status,login_count,role,saldo,username
+    global saldo,username
 
     # Algoritma
     if login_status == True:
@@ -674,7 +680,7 @@ def riwayat():
     # Kamus Lokal
     # count: int
     # i,j: int
-    global login_count,role,login_status,id_user,id_game,harga_riwayat,id_game_riwayat,user_id_riwayat,nama_game_riwayat,tahun_beli
+    global id_user,id_game,harga_riwayat,id_game_riwayat,user_id_riwayat,nama_game_riwayat,tahun_beli
     
     # Algoritma
     if login_status == True:
@@ -685,10 +691,10 @@ def riwayat():
                 if id_user[login_count] == user_id_riwayat[i]:          # Pencarian semua id user di data riwayat
                     count += 1                                          # Penanda urutan
                     print(str(count)+". "+id_game_riwayat[i]+" | "+nama_game_riwayat[i],end="")     # Print game user
-                    for j in range(40-length(nama_game_riwayat[i])):
+                    for j in range(40-length_sentence(nama_game_riwayat[i])):
                         print(" ",end="")
                     print(" | "+str(harga_riwayat[i]),end = "")
-                    for j in range(10-int(length(harga_riwayat[i]))):
+                    for j in range(10-int(length_sentence(harga_riwayat[i]))):
                         print(" ",end="")
                     print(" | "+str(tahun_beli[i])+" |")
             if count == 0:              # Pesan error jika user tidak memiliki game
@@ -700,7 +706,6 @@ def riwayat():
     
 # F13. Help
 def help():
-    global login_status,role,login_count
     if login_status == True:
         print("===========   HELP   ===========")
         if role[login_count] == "admin":
@@ -714,8 +719,9 @@ def help():
             print("7. search_game_at_store - Mencari game di toko dengan parameter opsional")
             print("8. topup - Topup saldo user tertentu")
             print("9. save - Menyimpan hasil aktivitas dalam program")
-            print("10. tic_tac_toe - Bermain game tic tac toe")
-            print("11. exit - Keluar dari program")
+            print("10. magic_conch_shell - Memberi pertanyaan kepada magic conch shell")
+            print("11. tic_tac_toe - Bermain game tic tac toe")
+            print("12. exit - Keluar dari program")
         else:
             # List command user
             print("1. login - Melakukan login dalam sistem.")
@@ -726,8 +732,9 @@ def help():
             print("6. search_game_at_store - Mencari game di toko game dengan paramter opsional")
             print("7. riwayat - Melihat riwayat pembelian game")
             print("8. save - Menyimpan hasil aktivitas dalam program")
-            print("9. tic_tac_toe - Bermain game tic tac toe")
-            print("9. exit - Keluar dari program")
+            print("9. magic_conch_shell - Memberi pertanyaan kepada magic conch shell")
+            print("10. tic_tac_toe - Bermain game tic tac toe")
+            print("11. exit - Keluar dari program")
     else:
         # List command tanpa login(kedua role)
             print("1. register - Melakukan registrasi user baru")
@@ -743,8 +750,9 @@ def help():
             print("11. riwayat - Melihat riwayat pembelian game")
             print("12. topup - Topup saldo user tertentu")
             print("13. save - Menyimpan hasil aktivitas dalam program")
-            print("14. tic_tac_toe - Bermain game tic tac toe")
-            print("15. exit - Keluar dari program")
+            print("14. magic_conch_shell - Memberi pertanyaan kepada magic conch shell")
+            print("15. tic_tac_toe - Bermain game tic tac toe")
+            print("16. exit - Keluar dari program")
 
 # F15. Load
 # Melakukan loading folder dan mengtransfer data ke dalam list saat program dipanggil
@@ -812,7 +820,6 @@ with open(data_path,'r') as f:
 # F16. Save
 def save():
     # Menyimpan data di csv sesuai data path
-    global login_status
 
     if login_status == True:
         # Penyimpanan file user.csv
@@ -826,36 +833,36 @@ def save():
         with open(data_path,"w") as f:
             for i in range(row_user):
                 if i != row_user-1:
-                    write_user = id_user[i]+";"+username[i]+";"+nama[i]+";"+password[i]+";"+role[i]+";"+saldo[i]+"\n"
+                    write_user = str(id_user[i])+";"+username[i]+";"+nama[i]+";"+password[i]+";"+role[i]+";"+str(saldo[i])+"\n"
                 else:
-                    write_user = id_user[i]+";"+username[i]+";"+nama[i]+";"+password[i]+";"+role[i]+";"+saldo[i]
+                    write_user = str(id_user[i])+";"+username[i]+";"+nama[i]+";"+password[i]+";"+role[i]+";"+str(saldo[i])
                 f.writelines(write_user)
         # Penyimpanan file game.csv
         data_path = os.path.join(current_dir,args.datafolder,"game.csv")
         with open(data_path,"w") as f:
             for i in range(row_game):
                 if i != row_game-1:
-                    write_game = id_game[i]+";"+nama_game[i]+";"+kategori_game[i]+";"+tahun_rilis[i]+";"+harga[i]+";"+stok[i]+"\n"
+                    write_game = id_game[i]+";"+nama_game[i]+";"+kategori_game[i]+";"+str(tahun_rilis[i])+";"+str(harga[i])+";"+str(stok[i])+"\n"
                 else:
-                    write_game = id_game[i]+";"+nama_game[i]+";"+kategori_game[i]+";"+tahun_rilis[i]+";"+harga[i]+";"+stok[i]
+                    write_game = id_game[i]+";"+nama_game[i]+";"+kategori_game[i]+";"+str(tahun_rilis[i])+";"+str(harga[i])+";"+str(stok[i])
                 f.writelines(write_game)
         # Penyimpanan file kepemilikan.csv
         data_path = os.path.join(current_dir,args.datafolder,"kepemilikan.csv")
         with open(data_path,"w") as f:
             for i in range(row_kepemilikan):
                 if i != row_kepemilikan-1:
-                    write_kepemilikan = id_game_kepemilikan[i]+";"+user_id_kepemilikan[i]+"\n"
+                    write_kepemilikan = id_game_kepemilikan[i]+";"+str(user_id_kepemilikan[i])+"\n"
                 else:
-                    write_kepemilikan = id_game_kepemilikan[i]+";"+user_id_kepemilikan[i]
+                    write_kepemilikan = id_game_kepemilikan[i]+";"+str(user_id_kepemilikan[i])
                 f.writelines(write_kepemilikan)
         # Penyimpanan file kepemilikan.csv
         data_path = os.path.join(current_dir,args.datafolder,"riwayat.csv")
         with open(data_path,"w") as f:
             for i in range(row_riwayat):
                 if i != row_riwayat-1:
-                    write_riwayat = id_game_riwayat[i]+";"+nama_game_riwayat[i]+";"+harga_riwayat[i]+";"+user_id_riwayat[i]+";"+tahun_beli[i]+"\n"
+                    write_riwayat = id_game_riwayat[i]+";"+nama_game_riwayat[i]+";"+str(harga_riwayat[i])+";"+str(user_id_riwayat[i])+";"+str(tahun_beli[i])+"\n"
                 else:
-                    write_riwayat = id_game_riwayat[i]+";"+nama_game_riwayat[i]+";"+harga_riwayat[i]+";"+user_id_riwayat[i]+";"+tahun_beli[i]
+                    write_riwayat = id_game_riwayat[i]+";"+nama_game_riwayat[i]+";"+str(harga_riwayat[i])+";"+str(user_id_riwayat[i])+";"+str(tahun_beli[i])
                 f.writelines(write_riwayat)
         print("Data berhasil disimpan!")
     else:
@@ -868,7 +875,6 @@ def exit():
 
     # Kamus lokal
     # save_command: string
-    global login_status
 
     # Algoritma
     if login_status == True:
@@ -880,6 +886,25 @@ def exit():
             quit()              # Langsung keluar program jika user tidak ingin menyimpan data
     else:
         quit()
+
+# Bonus 2
+# Magic Conch Shell
+def magic_conch_shell():
+    if login_status == True:
+        time = datetime.datetime.now()
+        n = time.minute+time.second
+        m = 937
+        c = time.hour
+        a = time.minute
+        print("Magic Conch Shell datang untuk menjawab semua pertanyaanmu. \nKetik exit jika Anda tidak ingin bertanya lagi pada Magic Conch Shell")
+        pertanyaan = input("Apa pertanyaanmu?\n")
+        while pertanyaan.lower() != "exit":
+            n = response_generator(n,a,c,m)
+            pertanyaan = input("Apa pertanyaanmu?\n")
+    else:
+        print("Fitur ini memerlukan akses login")
+
+
 
 # Bonus 3
 # Tic Tac Toe
@@ -928,7 +953,6 @@ def cek_grid(papan):
     # Kamus Lokal
     # papan: array of array of char
     # x,y: int
-    global x,y
     
     # Memeriksa jika grid tic tac toe sudah terisi
     if papan[x-1][y-1] == "O" or papan[x-1][y-1] == "X":
@@ -1031,9 +1055,10 @@ while True:                 # Pengulangan selama belum dilakukan exit
         save()
     elif perintah.lower() == "exit":
         exit()
+    elif perintah.lower() == "magic_conch_shell":
+        magic_conch_shell()
     elif perintah.lower() == "tic_tac_toe":
         tic_tac_toe()
     else:
         print("Perintah salah. Silahkan menginput ulang.")          # Pesan error salah perintah
-    
     perintah = input("Apa yang ingin kamu lakukan hari ini? Ketik help untuk melihat semua perintah yang ada \n")       # Pengulangan perintah/saat login
