@@ -1,0 +1,4 @@
+id;username;name;password;role;saldo
+1;admin;admin program;admin123;admin;100000
+2;user;user program;user123;user;9780000
+3;Hello;Hello;Hello;user;0
