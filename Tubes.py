@@ -398,6 +398,83 @@ def ubah_stok():
         print("Fitur perlu akses login")                            # Pesan error mengubah stok tanpa login
 
 # F07. Listing game
+# Untuk F07. Listing Game
+def sort_ascending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
+    # Mengsortir list dari kecil ke besar menggunakan selection sort
+
+    # Kamus lokal
+    # count_min,j,i: int
+    # obj,obj2: array of string
+    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
+    global row_game
+
+    # Algoritma
+    for j in range(1,row_game):
+        count_min = j                       # Penentuan elemen terkecil
+        for i in range(j+1,row_game):
+            if skema == "harga+":
+                if int(obj[i])<int(obj[count_min]):
+                    count_min = i 
+            else:
+                if obj[i]<obj[count_min]:
+                    count_min = i 
+        if count_min != j:                  # Mengubah elemen terkecil menjadi elemen ke-j jika elemen terkecil bukan elemen ke-j
+            obj[j],obj[count_min] = obj[count_min],obj[j]
+            nama_game_sort[j],nama_game_sort[count_min] = nama_game_sort[count_min],nama_game_sort[j]
+            id_game_sort[j],id_game_sort[count_min] = id_game_sort[count_min],id_game_sort[j]
+            obj2[j],obj2[count_min] = obj2[count_min],obj2[j]
+            kategori_game_sort[j],kategori_game_sort[count_min] = kategori_game_sort[count_min],kategori_game_sort[j]
+            stok_sort[j],stok_sort[count_min] = stok_sort[count_min],stok_sort[j]
+    return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort 
+
+def sort_descending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
+    # Mengurutkan list dari besar ke kecil menggunakan selection sort
+    # Kamus Lokal
+    # count_max,j,i: int
+    # obj,obj2: array of string
+    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
+    global row_game
+
+    # Algoritma
+    for j in range(1,row_game):
+        count_max = j                       # Pencarian elemen maximum
+        for i in range(j+1,row_game):
+            if skema == "harga-":
+                if int(obj[i])<int(obj[count_min]):
+                    count_min = i 
+            else:
+                if obj[i]<obj[count_min]:
+                    count_min = i 
+        obj[j],obj[count_max] = obj[count_max],obj[j]               # Penukaran elemen
+        nama_game_sort[j],nama_game_sort[count_max] = nama_game_sort[count_max],nama_game_sort[j]
+        id_game_sort[j],id_game_sort[count_max] = id_game_sort[count_max],id_game_sort[j]
+        obj2[j],obj2[count_max] = obj2[count_max],obj2[j]
+        kategori_game_sort[j],kategori_game_sort[count_max] = kategori_game_sort[count_max],kategori_game_sort[j]
+        stok_sort[j],stok_sort[count_max] = stok_sort[count_max],stok_sort[j]
+    return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort   
+
+def sorting(skema,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort):
+    # Melakukan sorting sesuai dengan fungsi sort ascending dan descending
+    
+    # Kamus Lokal
+    # skema: string
+    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
+    global tahun_rilis,nama_game,id_game,harga,kategori_game,stok
+    
+    # Algoritma
+    if skema == "tahun+":
+        sort_ascending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+    elif skema == "tahun-":
+        sort_descending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+    elif skema == "harga+":
+        sort_ascending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+    elif skema == "harga-":
+        sort_descending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
+    elif skema == "":                       # Tersortir sesuai id game jika skema kosong
+        sort_ascending(skema,id_game_sort,tahun_rilis_sort,nama_game_sort,harga_sort,kategori_game_sort,stok_sort)
+    else:                                   # Pesan error skema tidak sesua
+        return False
+
 def list_game_toko():
     # Mengeluarkan info semua game di toko dengan skema sortingannya
 
@@ -450,7 +527,7 @@ def buy_game():
     # harga_game_beli,nama_game_beli: string
     global id_game,id_game_kepemilikan,id_user,user_id_kepemilikan,row_game,row_kepemilikan,saldo,stok,nama_game,id_game_riwayat,nama_game_riwayat,user_id_riwayat,harga_riwayat,tahun_beli,row_riwayat,row_kepemilikan
     
-    # Algoritma
+                             # Algoritma
     if login_status == True:
         if role[login_count] == "user":
             # Input
@@ -597,7 +674,16 @@ def search_my_game():
                     if tahun_rilis_search == tahun_rilis_list[i] and id_game_search == id_game_list[i]:
                         found = True
                         count+=1
-                        print(str(count)+". "+id_game_list[i]+" | "+nama_game[game_index[i]]+" | "+str(harga[game_index[i]])+" | "+kategori_game[game_index[i]]+" | "+str(tahun_rilis_list[i]))
+                        print(str(count)+". "+id_game_list[i]+" | "+nama_game[game_index[i]],end = "")
+                        for i in range(length_sentence(40-nama_game[game_index[i]])):
+                            print(" ",end = "")
+                        print(" | "+str(harga[game_index[i]]),end = "")
+                        for i in range(10 - length_sentence(harga[game_index[i]])):
+                            print(" ",end = "")
+                        print("| "+kategori_game[game_index[i]],end = "")
+                        for i in range(20 - length_sentence(kategori_game[game_index[i]])):
+                            print(" ",end = "")
+                        print(" | "+str(tahun_rilis_list[i]))
             if found == False:                           # Pesan error tidak ditemukan game
                 print("Tidak ada game yang memenuhi kriteria.")
         else:                                            # Pencarian game yang dimiliki oleh admin
@@ -606,83 +692,6 @@ def search_my_game():
         print("Fitur ini memerlukan akses login")
 
 # F11. Mencari game di Toko
-
-# Untuk F07. Listing Game
-def sort_ascending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
-    # Mengsortir list dari kecil ke besar menggunakan selection sort
-
-    # Kamus lokal
-    # count_min,j,i: int
-    # obj,obj2: array of string
-    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
-    global row_game
-
-    # Algoritma
-    for j in range(1,row_game):
-        count_min = j                       # Penentuan elemen terkecil
-        for i in range(j+1,row_game):
-            if skema == "harga+":
-                if int(obj[i])<int(obj[count_min]):
-                    count_min = i 
-            else:
-                if obj[i]<obj[count_min]:
-                    count_min = i 
-        if count_min != j:                  # Mengubah elemen terkecil menjadi elemen ke-j jika elemen terkecil bukan elemen ke-j
-            obj[j],obj[count_min] = obj[count_min],obj[j]
-            nama_game_sort[j],nama_game_sort[count_min] = nama_game_sort[count_min],nama_game_sort[j]
-            id_game_sort[j],id_game_sort[count_min] = id_game_sort[count_min],id_game_sort[j]
-            obj2[j],obj2[count_min] = obj2[count_min],obj2[j]
-            kategori_game_sort[j],kategori_game_sort[count_min] = kategori_game_sort[count_min],kategori_game_sort[j]
-            stok_sort[j],stok_sort[count_min] = stok_sort[count_min],stok_sort[j]
-    return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort 
-
-def sort_descending(skema,obj,obj2,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort):
-    # Mengurutkan list dari besar ke kecil menggunakan selection sort
-    # Kamus Lokal
-    # count_max,j,i: int
-    # obj,obj2: array of string
-    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
-    global row_game
-
-    # Algoritma
-    for j in range(1,row_game):
-        count_max = j                       # Pencarian elemen maximum
-        for i in range(j+1,row_game):
-            if skema == "harga-":
-                if int(obj[i])<int(obj[count_min]):
-                    count_min = i 
-            else:
-                if obj[i]<obj[count_min]:
-                    count_min = i 
-        obj[j],obj[count_max] = obj[count_max],obj[j]               # Penukaran elemen
-        nama_game_sort[j],nama_game_sort[count_max] = nama_game_sort[count_max],nama_game_sort[j]
-        id_game_sort[j],id_game_sort[count_max] = id_game_sort[count_max],id_game_sort[j]
-        obj2[j],obj2[count_max] = obj2[count_max],obj2[j]
-        kategori_game_sort[j],kategori_game_sort[count_max] = kategori_game_sort[count_max],kategori_game_sort[j]
-        stok_sort[j],stok_sort[count_max] = stok_sort[count_max],stok_sort[j]
-    return obj,nama_game_sort,id_game_sort,obj2,kategori_game_sort,stok_sort   
-
-def sorting(skema,tahun_rilis_sort,nama_game_sort,id_game_sort,harga_sort,kategori_game_sort,stok_sort):
-    # Melakukan sorting sesuai dengan fungsi sort ascending dan descending
-    
-    # Kamus Lokal
-    # skema: string
-    # nama_game_sort,id_game_sort,kategori_game_sort,stok_sort: array of string
-    global tahun_rilis,nama_game,id_game,harga,kategori_game,stok
-    
-    # Algoritma
-    if skema == "tahun+":
-        sort_ascending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
-    elif skema == "tahun-":
-        sort_descending(skema,tahun_rilis_sort,harga_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
-    elif skema == "harga+":
-        sort_ascending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
-    elif skema == "harga-":
-        sort_descending(skema,harga_sort,tahun_rilis_sort,nama_game_sort,id_game_sort,kategori_game_sort,stok_sort)
-    elif skema == "":                       # Tersortir sesuai id game jika skema kosong
-        sort_ascending(skema,id_game_sort,tahun_rilis_sort,nama_game_sort,harga_sort,kategori_game_sort,stok_sort)
-    else:                                   # Pesan error skema tidak sesua
-        return False
 
 def search_game_at_store():
     # Mencari game di toko berdasarkan 5 parameter yang opsional
@@ -702,7 +711,7 @@ def search_game_at_store():
         tahun_rilis_search = input("Masukkan tahun rilis game: ")
         count = 0
         print("Game yang memenuhi kriteria: ")
-        for i in range(row_game):
+        for i in range(1,row_game):
             match = True
             if length_sentence(id_game_search)>0:                # Pencarian berdasarkan id game
                 if id_game_search != id_game[i]:
@@ -801,7 +810,7 @@ def riwayat():
     else:                               # Pesan error melihat riwayat tanpa login
         print("Fitur ini memerlukan akses login")
     
-# F13. Help
+# F14. Help
 def help():
     if login_status == True:
         print("===========   HELP   ===========")
@@ -987,18 +996,29 @@ def exit():
 # Bonus 2
 # Magic Conch Shell
 def magic_conch_shell():
+    # Melakukan fitur magic conch shell
+
+    # Kamus Lokal
+    # time: string
+    # n,m,c,a: int
+    # pertanyaan: string
+
+    # Algoritma
     if login_status == True:
-        time = datetime.datetime.now()
-        n = time.minute+time.second
+        time = datetime.datetime.now()          # Ekstrak waktu sekarang
+        n = time.minute+time.second             # Deklarasi variabel
         m = 937
         c = time.hour
         a = time.minute
         print("Magic Conch Shell datang untuk menjawab semua pertanyaanmu. \nKetik exit jika Anda tidak ingin bertanya lagi pada Magic Conch Shell")
+        # Input
         pertanyaan = input("Apa pertanyaanmu?\n")
         while pertanyaan.lower() != "exit":
+            # Looping fungsi magic conch shell
             n = response_generator(n,a,c,m)
             pertanyaan = input("Apa pertanyaanmu?\n")
     else:
+        # Pesan error magic conch shell tanpa login
         print("Fitur ini memerlukan akses login")
 
 
@@ -1108,7 +1128,7 @@ def tic_tac_toe():
             if winning_condition(papan,"X"):
                 print("Selamat. Pemain X menang")
                 break
-        if count == 4:
+        if count == 4 and winning_condition == False:
             # Jika permainan seri
             print("Permainan berakhir seri.")
     else:   # Pesan error tic tac toe tanpa login
